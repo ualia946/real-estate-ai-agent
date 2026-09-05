@@ -25,3 +25,8 @@ class UnsupportedCurrencyError(DomainError):
 class InvalidCoordinatesError(DomainError):
     def __init__(self, lat: float, lon: float, reason: str):
         super().__init__(f"Invalid coordinates ({lat}, {lon}): {reason}")
+
+
+class InvalidFilterError(DomainError):
+    def __init__(self, reason: str):
+        super().__init__(f"Invalid search filter: {reason}")
