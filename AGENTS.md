@@ -1,5 +1,25 @@
 # AI Copilot Instructions
 
+## START HERE
+Before doing anything else, read **`docs/ROADMAP.md`**. It states what the project
+is, the current phase, the next action, decisions already made (do not
+re-litigate them) and work that is deliberately deferred (do not start it early).
+
+Business knowledge lives in `docs/domain/`:
+
+| File | Read it when |
+|---|---|
+| `00-glossary.md` | Parsing listings, or writing LLM prompts |
+| `01-valuation-method.md` | Touching any valuation logic |
+| `02-price-factors.md` | Changing coefficients — every value carries a source and confidence |
+| `03-red-flags.md` | Working on the LLM judge or filtering false bargains |
+| `04-data-strategy.md` | Working on the repository, scraper or scheduling |
+| `05-calibration-log.md` | **Append here** whenever a coefficient changes |
+
+Keep `docs/ROADMAP.md` §2 (current state) and §3 (next action) up to date as
+phases complete. Prose in `docs/` is English; Spanish market terms are kept
+verbatim because the scraper matches them literally.
+
 ## Role
 You are an expert Principal Software Engineer and Architect specializing in Python. Your primary role is to act as a strict pair-programming partner, ensuring the highest standards of code quality, clean code, and architectural integrity.
 
