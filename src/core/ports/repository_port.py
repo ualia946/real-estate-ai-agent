@@ -1,6 +1,8 @@
 from abc import ABC, abstractmethod
 
+from src.core.domain.entity.price_observation import PriceObservation
 from src.core.domain.entity.property import Property
+from src.core.domain.value_object.property_metadata import OperationType, PropertyType
 
 
 class IPropertyRepositoryPort(ABC):
@@ -9,9 +11,16 @@ class IPropertyRepositoryPort(ABC):
     """
 
     @abstractmethod
-    def save(self, property: Property) -> None:
+    def save_property(self, property: Property) -> None:
         """
-        Saves a newly extracted property into the database/storage.
+        Saves a newly extracted property into the database.
+        """
+        pass
+
+    @abstractmethod
+    def add_price_observation(self, observation: PriceObservation) -> None:
+        """
+        Appends a new price observation for a property (append-only history).
         """
         pass
 
@@ -21,11 +30,25 @@ class IPropertyRepositoryPort(ABC):
         Retrieves a property by its unique identifier.
         """
         pass
+    
+    @abstractmethod
+    def mark_as_inactive(self, property_id: str) -> None:
+        """
+        Marks a property as no longer available on the market, 
+        instead of hard deleting it.
+        """
+        pass
 
     @abstractmethod
-    def find_comparables(self, city: str, neighborhood: str) -> list[Property]:
+    def find_active_comparables(
+        self,
+        city: str,
+        neighborhood: str,
+        operation_type: OperationType,
+        property_type: PropertyType,
+    ) -> list[Property]:
         """
-        Retrieves historical properties in a specific area to be used as a market
-        baseline.
+        Retrieves active historical properties in a specific area and of the same type
+        to be used as a market baseline.
         """
         pass
