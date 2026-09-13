@@ -1,37 +1,49 @@
 from abc import ABC, abstractmethod
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 from src.core.domain.entity.property import Property
 
 
 @dataclass(frozen=True)
-class EvaluationResult:
-    """DTO/Value Object representing the outcome of an AI evaluation."""
+class MathValuation:
+    """Result of the deterministic math homogenization phase."""
+    math_score: float
+    confidence_mad: float
+    rent_yield: float
 
-    score: float  # e.g., 0.0 to 10.0
-    reasoning: str  # AI explanation of why it gave this score
-    is_opportunity: bool
+
+@dataclass(frozen=True)
+class EvaluationResult:
+    """Final outcome after both Math and LLM filtering."""
+    math_valuation: MathValuation
+    final_score: float
+    red_flags: list[str] = field(default_factory=list)
+    qualitative_adjustment: float = 0.0
+    llm_reasoning: str = ""
+    is_opportunity: bool = False
 
 
 class IEvaluatorPort(ABC):
     """
-    Port interface for evaluating the profitability of a property.
+    Port interface for evaluating properties in a two-stage process:
+    1. Mathematical Homogenization
+    2. Qualitative LLM Judgment
     """
 
     @abstractmethod
-    def evaluate_property(
-        self, target: Property, market_comparables: list[Property]
+    def calculate_math_valuation(
+        self, target: Property, active_comparables: list[Property]
+    ) -> MathValuation:
+        """
+        Applies elasticity and coefficients to calculate the raw score and confidence.
+        """
+        pass
+
+    @abstractmethod
+    def judge_qualitative_factors(
+        self, target: Property, math_val: MathValuation
     ) -> EvaluationResult:
         """
-        Evaluates a property against similar properties to determine if it's a good
-        deal.
-
-        Args:
-            target: The property to evaluate.
-            market_comparables: A list of similar properties in the same area to use
-                as a baseline.
-
-        Returns:
-            An EvaluationResult containing the score and reasoning.
+        Passes the property prose to the LLM to find red flags and apply qualitative adjustments.
         """
         pass

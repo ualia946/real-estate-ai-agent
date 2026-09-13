@@ -2,11 +2,14 @@ from dataclasses import dataclass
 
 from ..errors import InvalidFilterError
 from .money import Money
+from .property_metadata import OperationType, PropertyType
 
 
 @dataclass(frozen=True)
 class RealEstateFilters:
     city: str
+    operation_type: OperationType | None = None
+    property_type: PropertyType | None = None
     min_price: Money | None = None
     max_price: Money | None = None
     min_square_meters: float | None = None
